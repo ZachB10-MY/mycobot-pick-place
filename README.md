@@ -72,3 +72,5 @@ python3 mycobot_color_sort.py
   instead of plain color blobs.
 - If two blocks of the same color overlap or touch, they may be
   detected as one blob — spread blocks out for reliable results.
+
+## Verifying updated Git Identity
