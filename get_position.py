@@ -6,22 +6,22 @@ copy-paste-ready format for the CONFIG section of mycobot_calibrate.py
 / mycobot_object_pick_place.py / mycobot_color_sort.py.
 
 HOW TO USE
-    1. Physically move the arm (drag-teach / free-move mode, or jog it
-       with myStudio, or run small scripted moves) to the position you
-       want to record -- e.g. your HOME position, or just above a bin.
-    2. Run this script:
+    1. Run this script:
            python3 get_position.py
-    3. It prints the current joint angles AND coordinates, each
+       It automatically releases the servos on startup, so the arm
+       goes limp and can be moved by hand right away.
+    2. Physically move the arm to the position you want to record --
+       e.g. your HOME position, or just above a bin.
+    3. Press ENTER in the terminal to read and print that position.
+       It prints the current joint angles AND coordinates, each
        already formatted as a Python list you can paste directly into
        HOME_ANGLES, BIN_ZONE, or DROP_ZONES.
-    4. Keep the terminal open and press ENTER to take another reading
-       (e.g. move the arm above a different bin) without restarting
-       the script. Ctrl+C to quit.
+    4. Keep the terminal open and repeat step 2-3 for each position
+       you need (HOME, above each bin, etc). Ctrl+C to quit.
 
-NOTE: if the arm is in a "locked"/powered state, it may resist being
-moved by hand. Many myCobot setups let you release the servos briefly
-for manual positioning -- check your specific release/free-move method
-if the arm feels stiff.
+NOTE: reading position with get_angles()/get_coords() does NOT
+re-lock the servos -- only sending a motion command does. So the arm
+stays movable by hand for as many readings as you need in one run.
 """
 
 import time
@@ -53,10 +53,15 @@ def main():
     print("Connecting to robot...")
     mc = MyCobot280(PI_PORT, PI_BAUD)
     time.sleep(1)
-    print("Connected.\n")
+    print("Connected.")
 
-    print("Move the arm (by hand, myStudio, or however you jog it) to the")
-    print("position you want to record, then press ENTER here to read it.")
+    print("Releasing servos so the arm can be moved by hand...")
+    mc.release_all_servos()
+    time.sleep(0.5)
+    print("Servos released -- the arm should now move freely by hand.\n")
+
+    print("Move the arm by hand to the position you want to record,")
+    print("then press ENTER here to read it.")
     print("You can do this repeatedly for HOME, each bin, etc.")
     print("Ctrl+C to quit.\n")
 
